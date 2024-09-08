@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # This will fetch the entire history to make it unshallow
+          fetch-depth: 0 
 
       - name: Set up Git user
         run: |
@@ -22,7 +22,7 @@ jobs:
 
       - name: Add Hugging Face remote and push to Spaces
         env:
-          HF_TOKEN: ${{ secrets.CASE_STUDY_1_SECRET }}  # Use the stored Hugging Face token
+          HF_TOKEN: ${{ secrets.CASE_STUDY_1_SECRET }}
         run: |
           git remote add space https://huggingface.co/spaces/BashirG/dis-background-removal-duplicated
           git push --force "https://huggingface.co:${HF_TOKEN}@huggingface.co/spaces/BashirG/dis-background-removal-duplicated" main
