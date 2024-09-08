@@ -7,18 +7,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  push-to-huggingface:
+  sync-to-huggingface:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 
+          lfs: true 
+
+      - name: Install Git LFS
+        run: |
+          git lfs install
 
       - name: Set up Git user
         run: |
           git config --global user.email "gulistani1999@gmail.com"
           git config --global user.name "Bashir1999"
+
+      - name: Add and track large files
+        run: |
+          git lfs track "*.zip" 
+          git add .gitattributes
+          git add large_file.zip
+          git commit -m "Add large file with Git LFS"
 
       - name: Add Hugging Face remote and push to Spaces
         env:
