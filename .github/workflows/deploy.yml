@@ -25,13 +25,6 @@ jobs:
           git config --global user.email "gulistani1999@gmail.com"
           git config --global user.name "Bashir1999"
 
-      - name: Add and track large files
-        run: |
-          git lfs track "*.zip" 
-          git add .gitattributes
-          git add large_file.zip
-          git commit -m "Add large file with Git LFS"
-
       - name: Add Hugging Face remote and push to Spaces
         env:
           HF_TOKEN: ${{ secrets.CASE_STUDY_1_SECRET }}
