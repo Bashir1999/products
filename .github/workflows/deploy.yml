@@ -18,7 +18,6 @@ jobs:
       - name: Push to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.CASE_STUDY_1_SECRET }}
-          HF_USERNAME: BashirG 
         run: |
-          git remote add space https://huggingface.co/spaces/${{ env.HF_USERNAME }}/dis-background-removal-duplicated
+          git remote add space https://huggingface.co/spaces/BashirG/dis-background-removal-duplicated
           git push --force space main
