@@ -151,7 +151,6 @@ button.lg:hover {
 
 # Used Some Codes From Yang's Chatbot
 with gr.Blocks(css=custom_css) as interface:
-    gr.Markdown(f"# {title}")
     gr.Markdown("<h1 style='text-align: center;'>🚩 Image Processor with Brightness Adjustment 🚩</h1>")
     with gr.Row():
         with gr.Column():
