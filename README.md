@@ -9,7 +9,8 @@ The procedure for using Discord whenever there's a push from the github to the h
 - Click "Just the Push Events"
 - Add Webhook
 
-Example: <img width="1264" alt="Screenshot 1403-06-25 at 23 21 40" src="https://github.com/user-attachments/assets/cc35e71a-2ffa-40ba-90f3-7f415f64c3f2">
+Example: <img width="1265" alt="Screenshot 1403-06-25 at 23 25 01" src="https://github.com/user-attachments/assets/43d6447f-006e-4112-9668-532fa5cd4f75">
+
 
 
 
