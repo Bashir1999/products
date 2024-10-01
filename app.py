@@ -281,8 +281,6 @@ with gr.Blocks(css=custom_css) as chatbot_interface:
 
 
 
-
-
 # Combine the two interfaces into a single app with tabs
 app = gr.TabbedInterface([chatbot_interface, background_remover_interface], ["AI Chatbot", "Background Remover"])
 
