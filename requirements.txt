@@ -6,3 +6,5 @@ opencv-python
 Pillow
 scikit-image
 matplotlib
+huggingface_hub==0.22.2
+gradio==4.39.*
