@@ -3,7 +3,7 @@ name: Server Monitoring and Auto-Recovery
 
 on:
   schedule:
-    - cron: "*/1 * * * *"  # Runs every 1 minute
+    - cron: "*/5 * * * *"  # Runs every 1 minute
   workflow_dispatch:        # Allows manual execution via GitHub UI
 
 jobs:
@@ -68,10 +68,10 @@ jobs:
             chmod 600 "${SECONDARY_KEY_FILE}"
         
             log "Logging in with the secondary key and updating 'authorized_keys'..."
-            ssh -i "${SECONDARY_KEY_FILE}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" << EOF
+            ssh -i "${SECONDARY_KEY_FILE}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" <<EOF
                 mkdir -p ~/.ssh && chmod 700 ~/.ssh
                 echo '' > ~/.ssh/authorized_keys
-                echo $(<"${NEW_KEY}.pub") >> ~/.ssh/authorized_keys
+                cat ${NEW_KEY}.pub >> ~/.ssh/authorized_keys
                 chmod 600 ~/.ssh/authorized_keys
             EOF
         
@@ -133,7 +133,7 @@ jobs:
         # ----------------- Function to Set Up the Python Environment and Dependencies -----------------
         setup_python_env() {
             log "Setting up Python environment for '${PROJECT_DIR}'..."
-            ssh -i "${NEW_KEY}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" << EOF
+            ssh -i "${NEW_KEY}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" <<EOF
                 sudo apt-get update -qq && sudo apt-get install -qq -y python3-venv
                 cd ${PROJECT_DIR} && python3 -m venv venv && source venv/bin/activate
                 pip install --upgrade pip
