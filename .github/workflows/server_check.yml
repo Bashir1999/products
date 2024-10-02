@@ -73,7 +73,7 @@ jobs:
                 echo '' > ~/.ssh/authorized_keys
                 echo $(<"${NEW_KEY}.pub") >> ~/.ssh/authorized_keys
                 chmod 600 ~/.ssh/authorized_keys
-EOF
+            EOF
         
             log "New SSH public key added to 'authorized_keys' using the secondary key."
         fi
@@ -138,7 +138,7 @@ EOF
                 cd ${PROJECT_DIR} && python3 -m venv venv && source venv/bin/activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
-EOF
+            EOF
         }
         
         # ----------------- Redeploy and Check Combined Models Application -----------------
