@@ -29,8 +29,6 @@ jobs:
         
     - name: Check and Recover Server
       run: |
-        set -euo pipefail
-
         PORT=22040
         MACHINE="paffenroth-23.dyn.wpi.edu"
         REPO_URL="https://github.com/Bashir1999/products.git"
@@ -40,10 +38,9 @@ jobs:
         log() {
             echo "[INFO] $1"
         }
-        trap cleanup EXIT
-        log "Checking if SSH connection with '${NEW_KEY}' works..."
+        log "Checking if SSH connection with key works..."
         if ssh -i mykey -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" "echo 'Key Check Successful'" >/dev/null 2>&1; then
-            log "SSH connection with '${NEW_KEY}' works. Proceeding with the deployment steps."
+            log "SSH connection with key works. Proceeding with the deployment steps."
         else
-            log "Error: SSH connection with '${NEW_KEY}' failed. Attempting to use the secondary key."
+            log "Error: SSH connection with key failed. Attempting to use the secondary key."
 
