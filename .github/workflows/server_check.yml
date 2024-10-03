@@ -39,6 +39,6 @@ jobs:
             echo "[INFO] $1"
         }
         log "Checking if SSH connection with key works..."
-        ssh -i mykey -p "${PORT}" -o StrictHostKeyChecking=no -o student-admin@"${MACHINE}" 
+        ssh -i mykey -p "${PORT}" -o StrictHostKeyChecking=no student-admin@"${MACHINE}" 
         log "SSH connection with key works. Proceeding with the deployment steps."
         
