@@ -14,6 +14,7 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_STUDENT_GEN }}
+        ssh-private-key2: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Store New SSH Key and Public Key in Files
       run: |
@@ -32,84 +33,17 @@ jobs:
 
         PORT=22040
         MACHINE="paffenroth-23.dyn.wpi.edu"
-        NEW_KEY="mykey"
-        SECONDARY_KEY_FILE="secondary_key" 
         REPO_URL="https://github.com/Bashir1999/products.git"
         PROJECT_DIR="products"
-        APP_FILE="app.py"  # Your application file
+        APP_FILE="app.py"
         
         log() {
             echo "[INFO] $1"
         }
-        cleanup() {
-            log "Cleaning up temporary files and SSH agent..."
-            ssh-agent -k >/dev/null 2>&1 || true
-            rm -f "${SECONDARY_KEY_FILE}"*  
-        }
         trap cleanup EXIT
         log "Checking if SSH connection with '${NEW_KEY}' works..."
-        if ssh -i "${NEW_KEY}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" "echo 'Key Check Successful'" >/dev/null 2>&1; then
+        if ssh -i mykey -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" "echo 'Key Check Successful'" >/dev/null 2>&1; then
             log "SSH connection with '${NEW_KEY}' works. Proceeding with the deployment steps."
         else
             log "Error: SSH connection with '${NEW_KEY}' failed. Attempting to use the secondary key."
-            echo "${{ secrets.SSH_PRIVATE_KEY_STUDENT_GEN }}" > "${SECONDARY_KEY_FILE}"
-            chmod 600 "${SECONDARY_KEY_FILE}"
-            log "Logging in with the secondary key and updating 'authorized_keys'..."
-            ssh -i "${SECONDARY_KEY_FILE}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" <<EOF
-                mkdir -p ~/.ssh && chmod 700 ~/.ssh
-                echo '' > ~/.ssh/authorized_keys
-                cat ${NEW_KEY}.pub >> ~/.ssh/authorized_keys
-                chmod 600 ~/.ssh/authorized_keys
-        EOF
-            log "New SSH public key added to 'authorized_keys' using the secondary key."
-        fi
-        log "Cleaning up known hosts for ${MACHINE}:${PORT}..."
-        ssh-keygen -f "${HOME}/.ssh/known_hosts" -R "[${MACHINE}]:${PORT}" >/dev/null 2>&1 || true
-        if ! ssh-add -l | grep -q "${NEW_KEY}"; then
-            log "Adding SSH key '${NEW_KEY}' to ssh-agent..."
-            eval "$(ssh-agent -s)"
-            ssh-add "${NEW_KEY}" >/dev/null 2>&1
-        fi
-        check_application() {
-            local APP_FILE=$1
-            log "Checking if the application '${APP_FILE}' is running..."
-            if ssh -i "${NEW_KEY}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" "pgrep -f ${APP_FILE}" > /dev/null 2>&1; then
-                log "'${APP_FILE}' is running."
-            else
-                log "'${APP_FILE}' is not running. Attempting to restart..."
-                start_application "${APP_FILE}"
-            fi
-        }
-        start_application() {
-            local APP_FILE=$1
-            log "Starting the application '${APP_FILE}'..."
-            ssh -i "${NEW_KEY}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" "cd ${PROJECT_DIR} && nohup venv/bin/python3 ${APP_FILE} > log_${PROJECT_DIR}.txt 2>&1 &"
-        }
-        redeploy_if_missing() {
-            log "Checking if the repository '${PROJECT_DIR}' exists..."
-            if ! ssh -i "${NEW_KEY}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" "test -d ${PROJECT_DIR}"; then
-                log "Repository '${PROJECT_DIR}' not found. Cloning and setting up the environment..."
-                deploy_repo "${REPO_URL}"
-                setup_python_env
-            else
-                log "Repository '${PROJECT_DIR}' exists. Checking if the application is running..."
-                check_application "${APP_FILE}"
-            fi
-        }
-        deploy_repo() {
-            local REPO_URL=$1
-        
-            log "Cloning repository '${REPO_URL}' into '${PROJECT_DIR}'..."
-            ssh -i "${NEW_KEY}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" "git clone ${REPO_URL} ${PROJECT_DIR}"
-        }
-        setup_python_env() {
-            log "Setting up Python environment for '${PROJECT_DIR}'..."
-            ssh -i "${NEW_KEY}" -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" <<EOF
-                sudo apt-get update -qq && sudo apt-get install -qq -y python3-venv
-                cd ${PROJECT_DIR} && python3 -m venv venv && source venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
-        EOF
-        }
-        redeploy_if_missing "${REPO_URL}"
-        log "Resilience testing complete. The combined application should be running."
+
