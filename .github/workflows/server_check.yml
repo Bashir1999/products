@@ -13,8 +13,7 @@ jobs:
     - name: Setup Secondary SSH Key
       uses: webfactory/ssh-agent@v0.5.3
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_STUDENT_GEN }}
-        ssh-private-key2: ${{ secrets.SSH_PRIVATE_KEY }}
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Store New SSH Key and Public Key in Files
       run: |
