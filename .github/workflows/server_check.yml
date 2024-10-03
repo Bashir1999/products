@@ -39,8 +39,6 @@ jobs:
             echo "[INFO] $1"
         }
         log "Checking if SSH connection with key works..."
-        if ssh -i mykey -p "${PORT}" -o StrictHostKeyChecking=no -o IdentitiesOnly=yes student-admin@"${MACHINE}" "echo 'Key Check Successful'" >/dev/null 2>&1; then
-            log "SSH connection with key works. Proceeding with the deployment steps."
-        else
-            log "Error: SSH connection with key failed. Attempting to use the secondary key."
-
+        ssh -i mykey -p "${PORT}" -o StrictHostKeyChecking=no -o student-admin@"${MACHINE}" 
+        log "SSH connection with key works. Proceeding with the deployment steps."
+        
