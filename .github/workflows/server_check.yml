@@ -21,6 +21,11 @@ jobs:
         chmod 600 mykey
         echo "${{ secrets.NEW_SSH_PUBLIC_KEY }}" > mykey.pub
 
+    - name: Store Old SSH Key
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY_STUDENT_GEN }}" > secondary_key
+        chmod 600 secondary_key
+        
     - name: Check and Recover Server
       run: |
         set -euo pipefail
