@@ -9,7 +9,7 @@ from torchvision import transforms
 import torch.nn.functional as F
 
 # --- Model 1: AI Chatbot Setup ---
-client = InferenceClient("HuggingFaceH4/zephyr-7b-beta")
+client = InferenceClient("mistralai/Mistral-7B-Instruct-v0.3") # HuggingFaceH4/zephyr-7b-beta
 
 # Personalities for AI Chatbot
 PERSONALITIES = {
