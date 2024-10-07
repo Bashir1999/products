@@ -285,4 +285,5 @@ with gr.Blocks(css=custom_css) as chatbot_interface:
 app = gr.TabbedInterface([chatbot_interface, background_remover_interface], ["AI Chatbot", "Background Remover"])
 
 # Launch the app
-app.launch(share=True)
+#app.launch(share=True)  
+app.launch(server_name="0.0.0.0", server_port=8040, share=True, enable_queue=True)
