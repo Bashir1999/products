@@ -88,7 +88,7 @@ def clear_conversation():
 #######
 
 os.system("git clone https://github.com/xuebinqin/DIS")
-os.system("mv DIS/IS-Net/* .")
+os.system("mv products/DIS/IS-Net/* .")
 
 from data_loader_cache import normalize, im_reader, im_preprocess 
 from models import *
@@ -97,7 +97,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 if not os.path.exists("saved_models"):
     os.mkdir("saved_models")
-    os.system("mv /home/student-admin/isnet.pth saved_models/")
+    os.system("mv products/isnet.pth saved_models/")
 
 class GOSNormalize(object):
     def __init__(self, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
