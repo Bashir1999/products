@@ -1,10 +1,4 @@
-torch
-torchvision
-requests
-gdown
-opencv-python
-Pillow
-scikit-image
-matplotlib
-huggingface_hub==0.22.2
-gradio==4.39.*
+huggingface_hub==0.23.*
+gradio==4.43.*
+pydantic==2.6.*
+prometheus_client==0.16.*
