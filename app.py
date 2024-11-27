@@ -78,7 +78,7 @@ def clear_conversation():
 # Custom CSS
 custom_css = """
 body {
-    background-color: #f0f0f0;
+    background-color: #080505;
 }
 .gradio-container {
     max-width: 900px;
@@ -109,4 +109,4 @@ with gr.Blocks(css=custom_css) as chatbot_interface:
     inspire_me_btn.click(generate_inspiration, inputs=history, outputs=chatbot)
 
 # Launch the app
-chatbot_interface.launch(share=True, enable_queue=True)
+chatbot_interface.launch(share=True)
