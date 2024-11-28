@@ -36,6 +36,6 @@ jobs:
       - name: Update Azure Container App
         run: |
           az containerapp update \
-            --name demoproduct \
+            --name demoproduct2 \
             --resource-group WPI-asc-export \
             --image products19.azurecr.io/my-app:latest
