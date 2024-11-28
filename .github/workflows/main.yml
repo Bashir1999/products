@@ -1,0 +1,47 @@
+name: Build and Deploy to GCP
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow when changes are pushed to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Google Cloud SDK
+    - name: Set up gcloud
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ace-mile-379006
+
+    # Step 3: Authenticate Docker with GCP
+    - name: Authenticate Docker with GCP
+      run: gcloud auth configure-docker
+
+    # Step 4: Build the Docker image
+    - name: Build Docker Image
+      run: |
+        docker build -t gcr.io/ace-mile-379006/product1b:$GITHUB_SHA .
+        docker tag gcr.io/ace-mile-379006/product1b:$GITHUB_SHA gcr.io/ace-mile-379006/product1b:latest
+
+    # Step 5: Push the Docker image to Google Container Registry (GCR)
+    - name: Push Docker Image to GCR
+      run: |
+        docker push gcr.io/ace-mile-379006/product1b:$GITHUB_SHA
+        docker push gcr.io/ace-mile-379006/product1b:latest
+
+    # Step 6: Deploy to Cloud Run
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy cs553p \
+          --image gcr.io/ace-mile-379006/product1b:latest \
+          --platform managed \
+          --region us-east1 \
+          --allow-unauthenticated
