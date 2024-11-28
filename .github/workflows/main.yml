@@ -32,20 +32,10 @@ jobs:
         run: |
           docker push products19.azurecr.io/my-app:latest
 
-      # Step 5: Deploy Azure Container App
-      - name: Deploy Azure Container App
+      # Step 5: Update Existing Azure Container App
+      - name: Update Azure Container App
         run: |
-          if ! az containerapp show --name my-container-app --resource-group WPI-asc-export > /dev/null 2>&1; then
-            az containerapp create \
-              --name my-container-app \
-              --resource-group WPI-asc-export \
-              --environment "managedEnvironment-WPIascexport-84f4 (WPI-asc-export)" \
-              --image products19.azurecr.io/my-app:latest \
-              --target-port 80 \
-              --ingress external
-          else
-            az containerapp update \
-              --name my-container-app \
-              --resource-group WPI-asc-export \
-              --image products19.azurecr.io/my-app:latest
-          fi
+          az containerapp update \
+            --name demoproduct \
+            --resource-group WPI-asc-export \
+            --image products19.azurecr.io/my-app:latest
