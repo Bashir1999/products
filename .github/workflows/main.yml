@@ -37,5 +37,5 @@ jobs:
         run: |
           az containerapp update \
             --name demoproduct2 \
-            --resource-group WPI-asc-export \
+            --resource-group githubaction \
             --image products19.azurecr.io/my-app:latest
