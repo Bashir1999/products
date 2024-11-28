@@ -39,7 +39,7 @@ jobs:
             az containerapp create \
               --name my-container-app \
               --resource-group WPI-asc-export \
-              --environment managedEnvironment-WPIascexport-84f4 \
+              --environment "managedEnvironment-WPIascexport-84f4 (WPI-asc-export)" \
               --image products19.azurecr.io/my-app:latest \
               --target-port 80 \
               --ingress external
