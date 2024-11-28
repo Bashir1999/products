@@ -1,7 +1,7 @@
 import gradio as gr
 from huggingface_hub import InferenceClient
 
-# --- Model 1: AI Chatbot Setup ---
+# --- Model 1: AI Chatbot Setup --
 client = InferenceClient("mistralai/Mistral-7B-Instruct-v0.3")
 
 # Personalities for AI Chatbot
