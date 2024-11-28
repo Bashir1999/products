@@ -19,26 +19,25 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Step 3: Log in to Azure Container Registry (ACR)
-      - name: Log in to ACR
+      # Step 3: Log in to ACR
+      - name: Log in to Azure Container Registry
         run: |
           az acr login --name products19
 
-      # Step 4: Build the container image
-      - name: Build Docker image
+      # Step 4: Build and Push the Docker Image
+      - name: Build Docker Image
         run: |
           docker build -t products19.azurecr.io/my-app:latest .
-
-      # Step 5: Push the container image to ACR
-      - name: Push Docker image to ACR
+      
+      - name: Push Docker Image to ACR
         run: |
           docker push products19.azurecr.io/my-app:latest
 
-      # Step 6: Deploy the container to Azure Container Apps
+      # Step 5: Deploy Container App
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
         with:
+          imageToDeploy: products19.azurecr.io/my-app:latest
           acrName: products19
           containerAppName: my-container-app
           resourceGroup: githubaction
-          containerImage: products19.azurecr.io/my-app:latest
