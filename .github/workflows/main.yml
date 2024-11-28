@@ -32,14 +32,14 @@ jobs:
         run: |
           docker push products19.azurecr.io/my-app:latest
 
-      # Step 5: Use Existing Managed Environment for Container App
+      # Step 5: Deploy Azure Container App
       - name: Deploy Azure Container App
         run: |
           if ! az containerapp show --name my-container-app --resource-group githubaction; then
             az containerapp create \
               --name my-container-app \
               --resource-group githubaction \
-              --environment my-container-app-env \
+              --environment managedEnvironment-WPIascexport-84f4 (WPI-asc-export) \
               --image products19.azurecr.io/my-app:latest \
               --target-port 7860 \
               --ingress external
