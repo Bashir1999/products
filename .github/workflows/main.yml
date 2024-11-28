@@ -22,13 +22,11 @@ jobs:
       # Step 3: Create or Use Existing Environment
       - name: Create or Use Existing Environment
         run: |
-          if ! az containerapp env show --name my-container-app-env --resource-group githubaction; then
             az containerapp env create \
               --name my-container-app-env \
               --resource-group githubaction \
               --location eastus
-          fi
-
+          
       # Step 4: Build Docker Image
       - name: Build Docker Image
         run: |
