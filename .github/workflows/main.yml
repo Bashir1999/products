@@ -35,17 +35,17 @@ jobs:
       # Step 5: Deploy Azure Container App
       - name: Deploy Azure Container App
         run: |
-          if ! az containerapp show --name my-container-app --resource-group githubaction; then
+          if ! az containerapp show --name my-container-app --resource-group WPI-asc-export > /dev/null 2>&1; then
             az containerapp create \
               --name my-container-app \
-              --resource-group githubaction \
-              --environment managedEnvironment-WPIascexport-84f4 (WPI-asc-export) \
+              --resource-group WPI-asc-export \
+              --environment managedEnvironment-WPIascexport-84f4 \
               --image products19.azurecr.io/my-app:latest \
-              --target-port 7860 \
+              --target-port 80 \
               --ingress external
           else
             az containerapp update \
               --name my-container-app \
-              --resource-group githubaction \
+              --resource-group WPI-asc-export \
               --image products19.azurecr.io/my-app:latest
           fi
