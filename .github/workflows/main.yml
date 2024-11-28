@@ -1,47 +1,44 @@
-name: Build and Deploy to GCP
+name: Azure Container Apps Deploy
 
 on:
   push:
     branches:
-      - main  # Trigger the workflow when changes are pushed to the main branch
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the repository
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      # Step 1: Check out the code
+      - uses: actions/checkout@v3
 
-    # Step 2: Set up Google Cloud SDK
-    - name: Set up gcloud
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: ace-mile-379006
+      # Step 2: Log in to Azure
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # Step 3: Authenticate Docker with GCP
-    - name: Authenticate Docker with GCP
-      run: gcloud auth configure-docker
+      # Step 3: Log in to Azure Container Registry (ACR)
+      - name: Log in to ACR
+        run: |
+          az acr login --name products19
 
-    # Step 4: Build the Docker image
-    - name: Build Docker Image
-      run: |
-        docker build -t us-east1-docker.pkg.dev/ace-mile-379006/demo:$GITHUB_SHA .
-        docker tag us-east1-docker.pkg.dev/ace-mile-379006/demo:$GITHUB_SHA us-east1-docker.pkg.dev/ace-mile-379006/demo:latest
+      # Step 4: Build the container image
+      - name: Build Docker image
+        run: |
+          docker build -t products19.azurecr.io/my-app:latest .
 
-    # Step 5: Push the Docker image to Google Container Registry (GCR)
-    - name: Push Docker Image to GCR
-      run: |
-        docker push us-east1-docker.pkg.dev/ace-mile-379006/demo:$GITHUB_SHA
-        docker push us-east1-docker.pkg.dev/ace-mile-379006/demo:latest
+      # Step 5: Push the container image to ACR
+      - name: Push Docker image to ACR
+        run: |
+          docker push products19.azurecr.io/my-app:latest
 
-    # Step 6: Deploy to Cloud Run
-    - name: Deploy to Cloud Run
-      run: |
-        gcloud run deploy dservice \
-          --image us-east1-docker.pkg.dev/ace-mile-379006/demo:latest \
-          --platform managed \
-          --region us-east1 \
-          --allow-unauthenticated
+      # Step 6: Deploy the container to Azure Container Apps
+      - name: Deploy to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          acrName: products19
+          containerAppName: my-container-app
+          resourceGroup: githubaction
+          containerImage: products19.azurecr.io/my-app:latest
